@@ -24,6 +24,8 @@ type AuthResponseStruct struct {
 	DeviceID  string `json:"deviceId"`
 	Success   bool   `json:"success"`
 	Sign      string `json："sign"`
+	ErrorCode string `json:"errorCode"`
+	Message   string `json:"message"`
 }
 
 func (s *AuthResponseStruct) IsSuccess() bool {
@@ -57,19 +59,13 @@ func IotAuth() *AuthResponseStruct {
 	return &response
 }
 
-func ConnectToServer(serverAddress string) MQTT.Client {
+func GetMqttClientOpts(serverAddress string) *MQTT.ClientOptions {
 	opts := MQTT.NewClientOptions().AddBroker("tcp://" + serverAddress)
 	opts.SetClientID(clientInfo.ProductKey + ":" + clientInfo.DeviceID)
 	opts.SetUsername(clientInfo.UserNameMD5)
 	opts.SetAutoReconnect(true)
 	opts.SetKeepAlive(80 * time.Second)
 	opts.SetMaxReconnectInterval(5 * time.Second)
-	opts.SetDefaultPublishHandler(func(client MQTT.Client, msg MQTT.Message) {})
 
-	//create and start a client using the above ClientOptions
-	c := MQTT.NewClient(opts)
-	if token := c.Connect(); token.Wait() && token.Error() != nil {
-		panic(token.Error())
-	}
-	return c
+	return opts
 }

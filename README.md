@@ -27,4 +27,4 @@ Here are the steps to init the client sdk
 2. run RegisterDeviceStruct.GetClientInfoStruct and get all you need to init a client
 3. run InitClient to init the client sdk
 4. run IotAuth() to get the server address
-5. run ConnectToServer() to connect to the Iot Hub
+5. run GetMqttClientOpts() to get mqtt client opts 
